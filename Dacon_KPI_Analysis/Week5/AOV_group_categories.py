@@ -40,21 +40,21 @@ complete_data = pd.merge(merged_data, data["products"], on='Product_id')
 average_order_value_per_customer = customer_total_order_value / customer_order_counts
 
 # AOV를 기준으로 각 고객을 평균보다 낮은 그룹과 높은 그룹으로 분류
-low_aov_group = average_order_value_per_customer[average_order_value_per_customer < 136.95]
-high_aov_group = average_order_value_per_customer[average_order_value_per_customer >= 136.95]
+low_aov_group = average_order_value_per_customer[(average_order_value_per_customer >= 10) & (average_order_value_per_customer < 60)]
+high_aov_group = average_order_value_per_customer[(average_order_value_per_customer >= 200) & (average_order_value_per_customer < 300)]
 
 # 고객 ID별로 평균보다 낮은 그룹과 높은 그룹에서 주문된 상품 카테고리별로 판매량을 계산
-low_group_sales = complete_data[complete_data['Customer_id'].isin(low_aov_group.index)].groupby('Product_category_name')['Order_id'].count().sort_values(ascending=False).head(5)
-high_group_sales = complete_data[complete_data['Customer_id'].isin(high_aov_group.index)].groupby('Product_category_name')['Order_id'].count().sort_values(ascending=False).head(5)
+low_group_sales = complete_data[complete_data['Customer_id'].isin(low_aov_group.index)].groupby('Product_category_name')['Order_id'].count().sort_values(ascending=False).head(10)
+high_group_sales = complete_data[complete_data['Customer_id'].isin(high_aov_group.index)].groupby('Product_category_name')['Order_id'].count().sort_values(ascending=False).head(10)
 
 # 원 그래프로 표현
 fig, ax = plt.subplots(1, 2, figsize=(18, 8))
 
 ax[0].pie(low_group_sales, labels=low_group_sales.index, autopct='%1.1f%%', startangle=140)
-ax[0].set_title('AOV가 평균보다 낮은 그룹의 상위 10개 판매 카테고리')
+ax[0].set_title('AOV가 10~60인 상위 10개 판매 카테고리')
 
 ax[1].pie(high_group_sales, labels=high_group_sales.index, autopct='%1.1f%%', startangle=140)
-ax[1].set_title('AOV가 평균보다 높은 그룹의 상위 10개 판매 카테고리')
+ax[1].set_title('AOV가 200~300인 상위 10개 판매 카테고리')
 
 plt.tight_layout()
 plt.show()
