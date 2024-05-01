@@ -52,3 +52,21 @@ plt.xlabel('월')
 plt.ylabel('평균 주문 가치')
 plt.xticks(rotation=45)
 plt.show()
+
+
+# 주문 건수
+# 주문 시간에서 월 정보 추출
+orders_df['Order_purchase_timestamp'] = pd.to_datetime(orders_df['Order_purchase_timestamp'])
+orders_df['month'] = orders_df['Order_purchase_timestamp'].dt.to_period('M')
+
+# 월별 주문 건수 계산
+monthly_orders = orders_df.groupby('month').size()
+
+# 월별 주문 건수 바 그래프로 시각화
+plt.figure(figsize=(10,6))
+monthly_orders.plot(kind='bar')
+plt.title('월별 주문 건수')
+plt.xlabel('월')
+plt.ylabel('주문 건수')
+plt.xticks(rotation=45)
+plt.show()
